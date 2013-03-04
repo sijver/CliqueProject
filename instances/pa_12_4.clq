@@ -1,0 +1,38 @@
+c Barbasi and Albert's preferential attachment model G(n, d), whith n = 12, d = 4
+c d is the min degree parameter
+c
+c seed id 1360866350
+c
+p edge 12 32
+e 1 10
+e 1 5
+e 1 6
+e 2 5
+e 2 6
+e 2 7
+e 2 8
+e 2 10
+e 2 11
+e 2 12
+e 3 5
+e 3 7
+e 4 5
+e 4 6
+e 4 7
+e 4 8
+e 4 9
+e 4 11
+e 5 6
+e 5 7
+e 5 9
+e 5 10
+e 6 8
+e 6 9
+e 6 12
+e 7 8
+e 7 9
+e 7 11
+e 7 12
+e 9 10
+e 9 11
+e 9 12

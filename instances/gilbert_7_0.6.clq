@@ -1,0 +1,19 @@
+c Gilbert's random graph G(n,p), whith n = 7 and p = 0.6
+c p is the probability for the independent edges to exist
+c
+c seed id 1360866350
+c
+p edge 7 13
+e 1 2
+e 1 3
+e 1 4
+e 1 7
+e 2 3
+e 2 5
+e 2 6
+e 3 4
+e 3 6
+e 3 7
+e 4 7
+e 5 7
+e 6 7
