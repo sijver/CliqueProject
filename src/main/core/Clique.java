@@ -16,6 +16,7 @@ public class Clique {
     private List<Set<Short>> allSolutions;
     private List<SolutionType> solutionTypes;
     private EnumMap<SolutionType, Double> solutionTypeStatistics;
+    private List<MacroState> collapsedSearchLandscape;
 
     public Clique(int nodesNum, int edgesNum, boolean[][] adjacencyMatrix) {
         this.nodesNum = nodesNum;
@@ -143,9 +144,8 @@ public class Clique {
     }
 
     public void computeAllSolutionTypes() {
-        createNeighbourhoodMatrix();
-
         if (solutionTypes == null) {
+            createNeighbourhoodMatrix();
             solutionTypes = new LinkedList<SolutionType>();
             for (short i = 0; i < allSolutions.size(); i++) {
                 short down = 0;
@@ -200,8 +200,8 @@ public class Clique {
     }
 
     public void createNeighbourhoodMatrix() {
-        computeAllSolutions();
         if (neighbourhoodMatrix == null) {
+            computeAllSolutions();
             neighbourhoodMatrix = new NeighbourhoodMatrix(allSolutions.size());
             for (int i = 0; i < allSolutions.size(); i++) {
                 for (int j = 0; j < i; j++) {
@@ -232,7 +232,7 @@ public class Clique {
         if (solutionTypeStatistics == null) {
             computeAllSolutionTypes();
             solutionTypeStatistics = new EnumMap<SolutionType, Double>(SolutionType.class);
-            for (SolutionType solutionType : SolutionType.values()){
+            for (SolutionType solutionType : SolutionType.values()) {
                 solutionTypeStatistics.put(solutionType, 0.0);
             }
             for (SolutionType solutionType : solutionTypes) {
@@ -247,5 +247,43 @@ public class Clique {
     public EnumMap<SolutionType, Double> getSolutionTypeStatistics() {
         computeSolutionTypeStatistics();
         return solutionTypeStatistics;
+    }
+
+    public void collapsePlateaus() {
+        if (collapsedSearchLandscape == null) {
+            computeAllSolutionTypes();
+            collapsedSearchLandscape = new LinkedList<MacroState>();
+            boolean[] isCheckedSolution = new boolean[allSolutions.size()];
+            for (short i = 0; i < allSolutions.size(); i++) {
+
+                if (!isCheckedSolution[i]) {
+                    int currentSolutionEvaluation = evaluateSolution(allSolutions.get(i));
+                    MacroState macroState = new MacroState(currentSolutionEvaluation);
+                    Set<Short> currentSolutionNeighbours = new HashSet<Short>(neighbourhoodMatrix.getAllNeighboursOfSolution(i));
+                    currentSolutionNeighbours.add(i);
+                    for(int j = 0; j < currentSolutionNeighbours.size(); j++){
+                        if(allSolutions.get((Short)currentSolutionNeighbours.toArray()[j]).size() == currentSolutionEvaluation){
+                            currentSolutionNeighbours.addAll(neighbourhoodMatrix.getAllNeighboursOfSolution((Short)currentSolutionNeighbours.toArray()[j]));
+                        }
+                    }
+
+                    for (Short currentSolutionNeighbour : currentSolutionNeighbours) {
+                        if (!isCheckedSolution[currentSolutionNeighbour]) {
+                            if (currentSolutionEvaluation == evaluateSolution(allSolutions.get(currentSolutionNeighbour))) {
+                                macroState.addSolutionToMacroState(currentSolutionNeighbour);
+                                isCheckedSolution[currentSolutionNeighbour] = true;
+                            }
+                        }
+                    }
+                    isCheckedSolution[i] = true;
+                    collapsedSearchLandscape.add(macroState);
+                }
+            }
+        }
+    }
+
+    public List<MacroState> getCollapsedSearchLandscape() {
+        collapsePlateaus();
+        return collapsedSearchLandscape;
     }
 }

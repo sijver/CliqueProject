@@ -1,9 +1,11 @@
 package main.run;
 
 import main.core.Clique;
+import main.core.MacroState;
 import main.core.SolutionType;
 import main.core.utils.CliqueReader;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Set;
 
@@ -19,7 +21,7 @@ public class Start {
         if (args.length > 0) {
             clique = CliqueReader.readCliqueInstance(args[0]);
         } else {
-            clique = CliqueReader.readCliqueInstance("instances/pa_12_10.clq");
+            clique = CliqueReader.readCliqueInstance("instances/pa_6_3.clq");
         }
 
         // Initialise the solution with a single node
@@ -62,6 +64,11 @@ public class Start {
         EnumMap<SolutionType, Double> solutionTypeStatistics = clique.getSolutionTypeStatistics();
         for(SolutionType solutionType : SolutionType.values()){
             System.out.println(String.format("%1$s %2$.3f%%", solutionType, solutionTypeStatistics.get(solutionType)));
+        }
+
+        for(MacroState macroState : clique.getCollapsedSearchLandscape()){
+            System.out.println(macroState.getSolutionsEvaluation());
+            System.out.println("  " + Arrays.toString(macroState.getSolutions().toArray()));
         }
 
     }
