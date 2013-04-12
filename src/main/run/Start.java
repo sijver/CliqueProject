@@ -39,8 +39,8 @@ public class Start {
         System.out.println(String.format("Quality: %d", clique.functionEvaluation()));
 
         System.out.println("Neighbours:");
-        for (Set<Short> set : clique.getNeighbours(clique.getSolution())) {
-            for (short i : set) {
+        for (Set<Integer> set : clique.getNeighbours(clique.getSolution())) {
+            for (int i : set) {
                 System.out.print((i + 1) + " ");
             }
             System.out.println();
@@ -48,8 +48,8 @@ public class Start {
 
         clique.createNeighbourhoodMatrix();
 
-        for (Set<Short> set : clique.getAllSolutions()) {
-            for (short s : set) {
+        for (Set<Integer> set : clique.getAllSolutions()) {
+            for (int s : set) {
                 System.out.print((s + 1) + " ");
             }
             System.out.println();

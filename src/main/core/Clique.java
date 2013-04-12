@@ -11,9 +11,9 @@ public class Clique {
     private int nodesNum;
     private int edgesNum;
     private boolean[][] adjacencyMatrix;
-    private Set<Short> solution = new HashSet<Short>();
+    private Set<Integer> solution = new HashSet<Integer>();
     private NeighbourhoodMatrix neighbourhoodMatrix;
-    private List<Set<Short>> allSolutions;
+    private List<Set<Integer>> allSolutions;
     private List<SolutionType> solutionTypes;
     private EnumMap<SolutionType, Double> solutionTypeStatistics;
     private List<MacroState> collapsedSearchLandscape;
@@ -24,7 +24,7 @@ public class Clique {
         this.adjacencyMatrix = adjacencyMatrix;
     }
 
-    public boolean isClique(List<Short> vector) {
+    public boolean isClique(List<Integer> vector) {
         for (int i : vector) {
             for (int j : vector) {
                 if (i != j && !adjacencyMatrix[i][j]) {
@@ -49,15 +49,15 @@ public class Clique {
         return solution.size();
     }
 
-    public int evaluateSolution(Set<Short> vector) {
+    public int evaluateSolution(Set<Integer> vector) {
         return vector.size();
     }
 
     public void expandSolution() {
         // Initial list of candidates
-        List<Short> candidates = new ArrayList<Short>();
-        for (short i = 0; i < nodesNum; i++) {
-            for (short j : solution) {
+        List<Integer> candidates = new ArrayList<Integer>();
+        for (int i = 0; i < nodesNum; i++) {
+            for (int j : solution) {
                 if (adjacencyMatrix[i][j]) {
                     candidates.add(i);
                 }
@@ -67,15 +67,15 @@ public class Clique {
         // Expand current clique
         while (candidates.size() > 0) {
             // Adding random candidate to current solution
-            short pos = (short) new Random().nextInt(candidates.size());
+            int pos = new Random().nextInt(candidates.size());
             solution.add(candidates.get(pos));
             candidates.remove(pos);
 
             // Adjusting the candidate set
-            List<Short> newCandidates = new ArrayList<Short>();
-            for (short i : candidates) {
+            List<Integer> newCandidates = new ArrayList<Integer>();
+            for (int i : candidates) {
                 boolean skip = false;
-                for (short j : solution) {
+                for (int j : solution) {
                     if (!adjacencyMatrix[i][j]) {
                         skip = true;
                     }
@@ -89,28 +89,28 @@ public class Clique {
     }
 
     public void initialiseSolution() {
-        solution.add((short) new Random().nextInt(nodesNum));
+        solution.add(new Random().nextInt(nodesNum));
     }
 
-    public List<Set<Short>> getNeighbours(Set<Short> vector) {
+    public List<Set<Integer>> getNeighbours(Set<Integer> vector) {
         // List of all nodes which are not in the solution
-        List<Short> candidates = new ArrayList<Short>();
-        for (short i = 0; i < nodesNum; i++) {
+        List<Integer> candidates = new ArrayList<Integer>();
+        for (int i = 0; i < nodesNum; i++) {
             if (!vector.contains(i)) {
                 candidates.add(i);
             }
         }
 
-        List<Short> vectorList = new LinkedList<Short>(vector);
+        List<Integer> vectorList = new LinkedList<Integer>(vector);
 
-        List<Set<Short>> neighbours = new LinkedList<Set<Short>>();
+        List<Set<Integer>> neighbours = new LinkedList<Set<Integer>>();
 
-        for (short i = 0; i < vectorList.size(); i++) {
-            short rememberSolutionNode = vectorList.get(i);
-            for (short j = 0; j < candidates.size(); j++) {
+        for (int i = 0; i < vectorList.size(); i++) {
+            int rememberSolutionNode = vectorList.get(i);
+            for (int j = 0; j < candidates.size(); j++) {
                 vectorList.set(i, candidates.get(j));
                 if (isClique(vectorList)) {
-                    neighbours.add(new HashSet<Short>(vectorList));
+                    neighbours.add(new HashSet<Integer>(vectorList));
                 }
             }
             vectorList.set(i, rememberSolutionNode);
@@ -119,23 +119,23 @@ public class Clique {
         return neighbours;
     }
 
-    public Set<Short> getSolution() {
+    public Set<Integer> getSolution() {
         return solution;
     }
 
     // Returns list of all possible cliques of current graph. Each solution represented like HashSet.
     public void computeAllSolutions() {
         if (allSolutions == null) {
-            allSolutions = new LinkedList<Set<Short>>();
-            for (short i = 0; i < nodesNum; i++) {
-                allSolutions.add(new HashSet<Short>(Arrays.asList(new Short[]{i})));
+            allSolutions = new LinkedList<Set<Integer>>();
+            for (int i = 0; i < nodesNum; i++) {
+                allSolutions.add(new HashSet<Integer>(Arrays.asList(new Integer[]{i})));
             }
 
             for (int j = 0; j < allSolutions.size(); j++) {
-                for (short i = 0; i < nodesNum; i++) {
-                    Set<Short> candidateSolution = new HashSet<Short>((Set<Short>) allSolutions.toArray()[j]);
+                for (int i = 0; i < nodesNum; i++) {
+                    Set<Integer> candidateSolution = new HashSet<Integer>((Set<Integer>) allSolutions.toArray()[j]);
                     candidateSolution.add(i);
-                    if (!allSolutions.contains(candidateSolution) && isClique(new LinkedList<Short>(candidateSolution))) {
+                    if (!allSolutions.contains(candidateSolution) && isClique(new LinkedList<Integer>(candidateSolution))) {
                         allSolutions.add(candidateSolution);
                     }
                 }
@@ -147,16 +147,16 @@ public class Clique {
         if (solutionTypes == null) {
             createNeighbourhoodMatrix();
             solutionTypes = new LinkedList<SolutionType>();
-            for (short i = 0; i < allSolutions.size(); i++) {
-                short down = 0;
-                short up = 0;
-                short side = 0;
+            for (int i = 0; i < allSolutions.size(); i++) {
+                int down = 0;
+                int up = 0;
+                int side = 0;
 
-                Set<Short> currentSolution = allSolutions.get(i);
+                Set<Integer> currentSolution = allSolutions.get(i);
                 int currentSolutionEvaluation = evaluateSolution(currentSolution);
 
-                List<Short> currentSolutionNeighbours = neighbourhoodMatrix.getAllNeighboursOfSolution(i);
-                for (Short currentSolutionNeighbour : currentSolutionNeighbours) {
+                List<Integer> currentSolutionNeighbours = neighbourhoodMatrix.getAllNeighboursOfSolution(i);
+                for (Integer currentSolutionNeighbour : currentSolutionNeighbours) {
                     int newSolutionEvaluation = evaluateSolution(allSolutions.get(currentSolutionNeighbour));
                     if (newSolutionEvaluation < currentSolutionEvaluation) {
                         down++;
@@ -186,9 +186,9 @@ public class Clique {
         }
     }
 
-    public boolean areNeighbours(Set<Short> vector1, Set<Short> vector2) {
+    public boolean areNeighbours(Set<Integer> vector1, Set<Integer> vector2) {
         int differences = 0;
-        for (short s1 : vector1) {
+        for (int s1 : vector1) {
             if (!vector2.contains(s1)) {
                 differences++;
             }
@@ -218,7 +218,7 @@ public class Clique {
         return neighbourhoodMatrix;
     }
 
-    public List<Set<Short>> getAllSolutions() {
+    public List<Set<Integer>> getAllSolutions() {
         computeAllSolutions();
         return allSolutions;
     }
@@ -254,20 +254,20 @@ public class Clique {
             computeAllSolutionTypes();
             collapsedSearchLandscape = new LinkedList<MacroState>();
             boolean[] isCheckedSolution = new boolean[allSolutions.size()];
-            for (short i = 0; i < allSolutions.size(); i++) {
+            for (int i = 0; i < allSolutions.size(); i++) {
 
                 if (!isCheckedSolution[i]) {
                     int currentSolutionEvaluation = evaluateSolution(allSolutions.get(i));
                     MacroState macroState = new MacroState(currentSolutionEvaluation);
-                    Set<Short> currentSolutionNeighbours = new HashSet<Short>(neighbourhoodMatrix.getAllNeighboursOfSolution(i));
+                    Set<Integer> currentSolutionNeighbours = new HashSet<Integer>(neighbourhoodMatrix.getAllNeighboursOfSolution(i));
                     currentSolutionNeighbours.add(i);
                     for(int j = 0; j < currentSolutionNeighbours.size(); j++){
-                        if(allSolutions.get((Short)currentSolutionNeighbours.toArray()[j]).size() == currentSolutionEvaluation){
-                            currentSolutionNeighbours.addAll(neighbourhoodMatrix.getAllNeighboursOfSolution((Short)currentSolutionNeighbours.toArray()[j]));
+                        if(allSolutions.get((Integer)currentSolutionNeighbours.toArray()[j]).size() == currentSolutionEvaluation){
+                            currentSolutionNeighbours.addAll(neighbourhoodMatrix.getAllNeighboursOfSolution((Integer)currentSolutionNeighbours.toArray()[j]));
                         }
                     }
 
-                    for (Short currentSolutionNeighbour : currentSolutionNeighbours) {
+                    for (Integer currentSolutionNeighbour : currentSolutionNeighbours) {
                         if (!isCheckedSolution[currentSolutionNeighbour]) {
                             if (currentSolutionEvaluation == evaluateSolution(allSolutions.get(currentSolutionNeighbour))) {
                                 macroState.addSolutionToMacroState(currentSolutionNeighbour);

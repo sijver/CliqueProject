@@ -32,10 +32,10 @@ public class NeighbourhoodMatrix {
         return neighbourhoodMatrix[i][j];
     }
 
-    public List<Short> getAllNeighboursOfSolution(int solutionNumber) {
-        List<Short> allNeighbours = new LinkedList<Short>();
+    public List<Integer> getAllNeighboursOfSolution(int solutionNumber) {
+        List<Integer> allNeighbours = new LinkedList<Integer>();
 
-        for (short i = 0; i < neighbourhoodMatrix.length; i++) {
+        for (int i = 0; i < neighbourhoodMatrix.length; i++) {
             if (neighbourhoodMatrix[solutionNumber][i]) {
                 allNeighbours.add(i);
             }

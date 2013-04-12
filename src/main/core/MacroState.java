@@ -8,20 +8,20 @@ import java.util.List;
  */
 public class MacroState {
 
-    private List<Short> solutions;
+    private List<Integer> solutions;
 
     private int solutionsEvaluation;
 
     public MacroState(int solutionsEvaluation) {
         this.solutionsEvaluation = solutionsEvaluation;
-        solutions = new LinkedList<Short>();
+        solutions = new LinkedList<Integer>();
     }
 
-    public void addSolutionToMacroState(Short solutionNumber){
+    public void addSolutionToMacroState(Integer solutionNumber){
         solutions.add(solutionNumber);
     }
 
-    public List<Short> getSolutions() {
+    public List<Integer> getSolutions() {
         return solutions;
     }
 
