@@ -286,4 +286,8 @@ public class Clique {
         collapsePlateaus();
         return collapsedSearchLandscape;
     }
+
+    public int getNodesNum() {
+        return nodesNum;
+    }
 }

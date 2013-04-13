@@ -4,6 +4,7 @@ import main.core.Clique;
 import main.core.MacroState;
 import main.core.SolutionType;
 import main.core.utils.CliqueReader;
+import main.ui.SolutionFrame;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -21,7 +22,7 @@ public class Start {
         if (args.length > 0) {
             clique = CliqueReader.readCliqueInstance(args[0]);
         } else {
-            clique = CliqueReader.readCliqueInstance("instances/pa_6_3.clq");
+            clique = CliqueReader.readCliqueInstance("instances/pa_11_3.clq");
         }
 
         // Initialise the solution with a single node
@@ -38,28 +39,28 @@ public class Start {
         System.out.println();
         System.out.println(String.format("Quality: %d", clique.functionEvaluation()));
 
-        System.out.println("Neighbours:");
-        for (Set<Integer> set : clique.getNeighbours(clique.getSolution())) {
-            for (int i : set) {
-                System.out.print((i + 1) + " ");
-            }
-            System.out.println();
-        }
+//        System.out.println("Neighbours:");
+//        for (Set<Integer> set : clique.getNeighbours(clique.getSolution())) {
+//            for (int i : set) {
+//                System.out.print((i + 1) + " ");
+//            }
+//            System.out.println();
+//        }
 
         clique.createNeighbourhoodMatrix();
 
-        for (Set<Integer> set : clique.getAllSolutions()) {
-            for (int s : set) {
-                System.out.print((s + 1) + " ");
-            }
-            System.out.println();
-        }
+//        for (Set<Integer> set : clique.getAllSolutions()) {
+//            for (int s : set) {
+//                System.out.print((s + 1) + " ");
+//            }
+//            System.out.println();
+//        }
 
-        clique.getNeighbourhoodMatrix().print();
+//        clique.getNeighbourhoodMatrix().print();
 
-        for(SolutionType solutionType : clique.getSolutionTypes()){
-            System.out.println(solutionType);
-        }
+//        for(SolutionType solutionType : clique.getSolutionTypes()){
+//            System.out.println(solutionType);
+//        }
 
         EnumMap<SolutionType, Double> solutionTypeStatistics = clique.getSolutionTypeStatistics();
         for(SolutionType solutionType : SolutionType.values()){
@@ -70,6 +71,9 @@ public class Start {
             System.out.println(macroState.getSolutionsEvaluation());
             System.out.println("  " + Arrays.toString(macroState.getSolutions().toArray()));
         }
+
+        SolutionFrame solutionFrame = new SolutionFrame();
+        solutionFrame.setPicture(clique.getCollapsedSearchLandscape(), clique.getNeighbourhoodMatrix(), clique.getAllSolutions().size());
 
     }
 
