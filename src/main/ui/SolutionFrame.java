@@ -19,6 +19,9 @@ public class SolutionFrame extends JFrame {
     private NeighbourhoodMatrix neighbourhoodMatrix;
     private int solutionsNum;
 
+    public static final int RADIUS = 3;
+    public static final int DIAMETER = RADIUS * 2;
+
     private HashMap<Integer, Integer> solutionCostNumbers;
     int maxVertical = 0;
     int minVertical = 0;
@@ -74,8 +77,8 @@ public class SolutionFrame extends JFrame {
             int y1 = 0;
             for (Solution solution : solutionPoints) {
                 if (i == solution.getNumber()) {
-                    x1 = solution.getX();
-                    y1 = solution.getY();
+                    x1 = solution.getX() + RADIUS;
+                    y1 = solution.getY() + RADIUS;
                 }
             }
             for (int j = 0; j < solutionsNum; j++) {
@@ -84,8 +87,8 @@ public class SolutionFrame extends JFrame {
                     int y2 = 0;
                     for (Solution solution : solutionPoints) {
                         if (j == solution.getNumber()) {
-                            x2 = solution.getX();
-                            y2 = solution.getY();
+                            x2 = solution.getX() + RADIUS;
+                            y2 = solution.getY() + RADIUS;
                         }
                     }
                     lines.add(new LineDescription(x1, y1, x2, y2));
@@ -107,7 +110,7 @@ public class SolutionFrame extends JFrame {
 
             Graphics2D g2 = (Graphics2D) g;
             for (Solution solutionPoint : solutionPoints) {
-                g2.draw(new Ellipse2D.Double(solutionPoint.getX(), solutionPoint.getY(), 5, 5));
+                g2.draw(new Ellipse2D.Double(solutionPoint.getX(), solutionPoint.getY(), DIAMETER, DIAMETER));
             }
             for (LineDescription line : lines) {
                 g2.draw(new Line2D.Double(line.getX1(), line.getY1(), line.getX2(), line.getY2()));
